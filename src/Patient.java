@@ -12,7 +12,5 @@ public class Patient {
         return id;
     }
 
-    public String toString(){
-        return "Patient ID: "+id.toString();
-    }
+
 }
