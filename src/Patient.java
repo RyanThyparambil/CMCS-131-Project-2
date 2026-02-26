@@ -8,6 +8,11 @@ public class Patient {
         this.id=UUID.randomUUID();
     }
 
+    static Patient makePatient(){
+        Patient pat = new Patient();
+        return pat;
+    }
+
     public UUID getID(){
         return id;
     }
