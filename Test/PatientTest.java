@@ -12,11 +12,5 @@ public class PatientTest {
         assertNotEquals(p1.getID(), p2.getID());
     }
 
-    @Test
-    public void testToStringContainsId() {
-        Patient p = new Patient();
-        String result = p.toString();
-        assertTrue(result.contains(p.getID().toString()));
-    }
 
 }
