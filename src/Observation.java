@@ -1,3 +1,4 @@
 abstract class Observation {
-    abstract public boolean dangerous();
+    abstract public int dangerous();
+    abstract public int checkForDangerousTrend();
 }
