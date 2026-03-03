@@ -3,7 +3,7 @@ import java.util.Random;
 
 public class Simulation {
     private Hospital hospital;
-    private int currentTime;
+    private static int currentTime;
 
     private int totalTime;
     private int timeStep;
@@ -54,6 +54,9 @@ public class Simulation {
 
     public Hospital getHospital() {
         return hospital;
+    }
+    public static int getCurrentTime(){
+        return currentTime;
     }
 }
 
