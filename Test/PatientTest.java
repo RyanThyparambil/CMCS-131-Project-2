@@ -12,5 +12,13 @@ public class PatientTest {
         assertNotEquals(p1.getID(), p2.getID());
     }
 
+    @Test
+    void getIDTest(){
+        Patient p1 = new Patient();
+        assertNotNull(p1.getID());
+    }
+
+
+
 
 }

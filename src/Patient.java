@@ -3,22 +3,26 @@ import java.util.UUID;
 public class Patient {
 
     private UUID id;
-    private String Name;
-    private String Dob;
 
-    public Patient(String name, String dob){
+    public Patient(){
         this.id=UUID.randomUUID();
-        this.Name=name;
-        this.Dob=dob;
     }
 
-    static Patient makePatient(){
-        Patient pat = new Patient();
-        return pat;
+    public static Patient createPatient() {
+        return new Patient();
     }
 
     public UUID getID(){
         return id;
+    }
+
+    public String toCSV() {
+        return id.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "Patient ID: " + id.toString();
     }
 
 
