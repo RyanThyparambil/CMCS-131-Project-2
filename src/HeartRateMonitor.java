@@ -1,6 +1,7 @@
 public class HeartRateMonitor extends Device{
+    private Observation[] = new Observation[10];
     public Observation read(){
-        HeartRate rate = new HeartRate();
-        return rate;
+        HeartRate temp=new HeartRate();
+
     }
 }
