@@ -8,5 +8,6 @@ public abstract class Observation{
         return time;
     }
     public abstract String getValueString();
+    public abstract int checkCondition();
 
 }

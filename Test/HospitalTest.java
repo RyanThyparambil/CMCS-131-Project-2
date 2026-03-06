@@ -5,7 +5,7 @@ public class HospitalTest {
 
     @Test
     void testAddPatient() {
-        Hospital hospital = new Hospital(2);
+        Hospital hospital = new Hospital(2, 2);
 
         Patient patient1 = new Patient();
         Patient patient2 = new Patient();
@@ -21,7 +21,7 @@ public class HospitalTest {
 
     @Test
     void testAddPatientFailsWhenFull() {
-        Hospital hospital = new Hospital(2);
+        Hospital hospital = new Hospital(2, 2);
 
         Patient patient1 = new Patient();
         Patient patient2 = new Patient();
@@ -37,7 +37,7 @@ public class HospitalTest {
 
     @Test
     void testGetPatientInvalidIndex() {
-        Hospital hospital = new Hospital(2);
+        Hospital hospital = new Hospital(2,2);
         Patient patient1 = new Patient();
         hospital.addPatient(patient1);
 
@@ -47,7 +47,7 @@ public class HospitalTest {
 
     @Test
     void testPatientsArrayLength() {
-        Hospital hospital = new Hospital(2);
+        Hospital hospital = new Hospital(2,2);
         assertTrue(hospital.getPatients().length == 2);
     }
 }
