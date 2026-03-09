@@ -8,8 +8,8 @@ public class Patient {
     public Patient(){
         this.id=UUID.randomUUID();
         patientDevice[0]=new HeartRateMonitor();
-        //patientDevice[1]=
-        //patientDevice[2]=
+        patientDevice[1] = new BloodPressureMonitor();
+        patientDevice[2] = new SpO2Monitor();
     }
 
     public static Patient createPatient() {
@@ -29,19 +29,27 @@ public class Patient {
         return "Patient ID: " + id.toString();
     }
 
-    public void checkPatient(Hospital hospital){
-        for(int i=0; i<patientDevice.length;i++){
+    public void checkPatient(Hospital hospital) {
+        for (int i = 0; i < patientDevice.length; i++) {
             if (patientDevice[i] != null) {
                 Observation obs = patientDevice[i].read();
-                int severity = obs.checkCondition();
 
-                // If severity is 1 or 2, tell the hospital
+                // Print the reading so you can see it in the console
+                System.out.println("  [Device] " + obs.getValueString());
+
+                int severity = obs.checkCondition();
                 if (severity > 0) {
                     hospital.addAlert(this, severity);
                 }
             }
         }
+    }
 
+    public void pressBuzzer(Hospital hospital) {
+        if (Simulation.getRandomInt(1, 100) <= 5) {
+            System.out.println("  [Buzzer] Patient " + id + " pressed the call button!");
+            hospital.addManualCall(this);
+        }
     }
 
 }

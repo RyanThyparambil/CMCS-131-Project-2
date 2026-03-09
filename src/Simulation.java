@@ -10,7 +10,6 @@ public class Simulation {
     private int timeStep;
     private int numPatients;
 
-
     public void setup() {
         Scanner input = new Scanner(System.in);
 
@@ -25,41 +24,48 @@ public class Simulation {
         System.out.print("Enter number of patients to simulate: ");
         this.numPatients = input.nextInt();
 
-        // Added prompt for Nurse count to satisfy the Hospital(int, int) constructor
         System.out.print("Enter number of nurses to simulate: ");
         int numNurses = input.nextInt();
 
-        // Now calling the constructor with BOTH arguments
         this.hospital = new Hospital(this.numPatients, numNurses);
         this.currentTime = 0;
-
-        System.out.println("\nSetup complete.");
-        System.out.println("Hospital initialized with " + numPatients + " patients and " + numNurses + " nurses.");
-    }
-
-    public void run() {
-        System.out.println("\n--- Starting Simulation ---");
 
         for (int i = 0; i < numPatients; i++) {
             hospital.addPatient(new Patient());
         }
 
-        int numNurses = (numPatients / 5) + 1;
         for (int i = 0; i < numNurses; i++) {
             hospital.addNurse(new Nurse("Nurse_" + (i + 1)));
         }
 
-        while (currentTime < totalTime) {
-            System.out.println("\n[Time: " + currentTime + " minutes]");
+        System.out.println("\nSetup complete. Hospital ready.");
+    }
 
-           for (int i = 0; i < hospital.getPatientCount(); i++) {
+    public void run() {
+        if (hospital == null || hospital.getPatientCount() == 0) {
+            System.out.println("Error: Run setup first.");
+            return;
+        }
+
+        System.out.println("\n--- Starting Simulation ---");
+
+        while (currentTime < totalTime) {
+            System.out.println("\n====================================");
+            System.out.println("TIME: " + currentTime + " minutes");
+            System.out.println("====================================");
+
+            for (int i = 0; i < hospital.getPatientCount(); i++) {
                 Patient p = hospital.getPatient(i);
                 if (p != null) {
+                    System.out.println("Checking Patient: " + p.getID());
                     p.checkPatient(hospital);
+                    p.pressBuzzer(hospital);
                 }
             }
 
+            System.out.println("\n--- Nurse Activity ---");
             hospital.dispatchStaff();
+
             currentTime += timeStep;
         }
 
@@ -69,12 +75,10 @@ public class Simulation {
     public void process() {
         System.out.println("\n--- Final Simulation Summary ---");
         System.out.println("Total Time Simulated: " + totalTime + " minutes");
-        System.out.println("Time Step: " + timeStep + " minutes");
         System.out.println("Total Patients: " + hospital.getPatientCount());
-
         System.out.println("Total High Severity Alerts: " + hospital.getHighAlertCount());
+        System.out.println("Total Manual Buzzer Calls: " + hospital.getManualCallCount());
         System.out.println("Total Low Severity Alerts: " + hospital.getLowAlertCount());
-
         System.out.println("---------------------------------");
     }
 
@@ -82,13 +86,7 @@ public class Simulation {
         return random.nextInt((max - min) + 1) + min;
     }
 
-    public Hospital getHospital() {
-        return hospital;
-    }
-    public static int getCurrentTime(){
+    public static int getCurrentTime() {
         return currentTime;
     }
-
-
 }
-
