@@ -1,4 +1,4 @@
-public class SpO2Monitor extends Device {
+public class Sp02Monitor extends Device {
     private Observation[] observations = new Observation[10];
 
     @Override

@@ -9,7 +9,7 @@ public class Patient {
         this.id=UUID.randomUUID();
         patientDevice[0]=new HeartRateMonitor();
         patientDevice[1] = new BloodPressureMonitor();
-        patientDevice[2] = new SpO2Monitor();
+        patientDevice[2] = new Sp02Monitor();
     }
 
     public static Patient createPatient() {
