@@ -2,16 +2,18 @@ public class Nurse {
     private String name;
     private boolean isBusy;
     private Patient currentTask;
+    private int resolutionProbability;
 
-    public Nurse(String name) {
+    public Nurse(String name, int resolutionProbability) {
         this.name = name;
         this.isBusy = false;
         this.currentTask = null;
+        this.resolutionProbability = resolutionProbability;
     }
+
     public void treatPatient() {
         if (currentTask != null) {
-            // 80% chance to resolve the alert
-            if (Simulation.getRandomInt(1, 10) <= 8) {
+            if (Simulation.getRandomInt(1, 100) <= resolutionProbability) {
                 System.out.println("Nurse " + name + " resolved alert for Patient: " + currentTask.getID());
                 currentTask = null;
                 isBusy = false;
@@ -24,6 +26,7 @@ public class Nurse {
     public void assignPatient(Patient p) {
         this.currentTask = p;
         this.isBusy = true;
+        System.out.println("Nurse " + name + " assigned to Patient: " + p.getID());
     }
 
     public boolean isBusy() {

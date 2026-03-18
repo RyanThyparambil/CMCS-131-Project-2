@@ -5,27 +5,24 @@ public class Simulation {
     private Hospital hospital;
     private static int currentTime;
     private static Random random = new Random();
-
     private int totalTime;
     private int timeStep;
     private int numPatients;
+    private int resolutionChance;
 
     public void setup() {
         Scanner input = new Scanner(System.in);
-
         System.out.println("--- Hospital Simulation Setup ---");
-
         System.out.print("Enter total simulation time (mins): ");
         this.totalTime = input.nextInt();
-
         System.out.print("Enter time step (mins): ");
         this.timeStep = input.nextInt();
-
-        System.out.print("Enter number of patients to simulate: ");
+        System.out.print("Enter number of patients: ");
         this.numPatients = input.nextInt();
-
-        System.out.print("Enter number of nurses to simulate: ");
+        System.out.print("Enter number of nurses: ");
         int numNurses = input.nextInt();
+        System.out.print("Enter nurse resolution probability (1-100): ");
+        this.resolutionChance = input.nextInt();
 
         this.hospital = new Hospital(this.numPatients, numNurses);
         this.currentTime = 0;
@@ -35,51 +32,30 @@ public class Simulation {
         }
 
         for (int i = 0; i < numNurses; i++) {
-            hospital.addNurse(new Nurse("Nurse_" + (i + 1)));
+            hospital.addNurse(new Nurse("Nurse_" + (i + 1), resolutionChance));
         }
-
-        System.out.println("\nSetup complete. Hospital ready.");
     }
 
     public void run() {
-        if (hospital == null || hospital.getPatientCount() == 0) {
-            System.out.println("Error: Run setup first.");
-            return;
-        }
-
-        System.out.println("\n--- Starting Simulation ---");
-
+        if (hospital == null || hospital.getPatientCount() == 0) return;
         while (currentTime < totalTime) {
-            System.out.println("\n====================================");
-            System.out.println("TIME: " + currentTime + " minutes");
-            System.out.println("====================================");
-
+            System.out.println("\nTIME: " + currentTime);
             for (int i = 0; i < hospital.getPatientCount(); i++) {
                 Patient p = hospital.getPatient(i);
                 if (p != null) {
-                    System.out.println("Checking Patient: " + p.getID());
                     p.checkPatient(hospital);
                     p.pressBuzzer(hospital);
                 }
             }
-
-            System.out.println("\n--- Nurse Activity ---");
             hospital.dispatchStaff();
-
             currentTime += timeStep;
         }
-
-        System.out.println("\n--- Simulation Complete ---");
     }
 
     public void process() {
-        System.out.println("\n--- Final Simulation Summary ---");
-        System.out.println("Total Time Simulated: " + totalTime + " minutes");
-        System.out.println("Total Patients: " + hospital.getPatientCount());
-        System.out.println("Total High Severity Alerts: " + hospital.getHighAlertCount());
-        System.out.println("Total Manual Buzzer Calls: " + hospital.getManualCallCount());
-        System.out.println("Total Low Severity Alerts: " + hospital.getLowAlertCount());
-        System.out.println("---------------------------------");
+        System.out.println("\n--- Final Summary ---");
+        System.out.println("High Alerts Processed: " + hospital.getHighAlertCount());
+        System.out.println("Low Alerts Processed: " + hospital.getLowAlertCount());
     }
 
     public static int getRandomInt(int min, int max) {
