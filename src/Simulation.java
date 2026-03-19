@@ -8,7 +8,7 @@ public class Simulation {
     private int totalTime;
     private int timeStep;
     private int numPatients;
-    private int resolutionChance;
+    private static int resolutionChance;
 
     public void setup() {
         Scanner input = new Scanner(System.in);
@@ -64,5 +64,9 @@ public class Simulation {
 
     public static int getCurrentTime() {
         return currentTime;
+    }
+
+    public static int getResolutionChance(){
+        return resolutionChance;
     }
 }

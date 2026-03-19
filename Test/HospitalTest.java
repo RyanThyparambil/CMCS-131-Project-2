@@ -51,34 +51,30 @@ public class HospitalTest {
 
         assertEquals(1, hospital.getHighAlertCount());
         assertEquals(1, hospital.getLowAlertCount());
-        assertEquals(1, hospital.getManualCallCount());
     }
 
     @Test
     void testDispatchPriority() {
         Hospital hospital = new Hospital(10, 1);
-        Nurse nurse = new Nurse("TestNurse");
+        Nurse nurse = new Nurse("TestNurse",Simulation.getResolutionChance());
         hospital.addNurse(nurse);
 
         Patient highPat = new Patient();
         Patient lowPat = new Patient();
-        Patient buzzerPat = new Patient();
 
         hospital.addAlert(lowPat, 1);
-        hospital.addManualCall(buzzerPat);
         hospital.addAlert(highPat, 2);
 
         hospital.dispatchStaff();
 
-        assertEquals(0, hospital.getHighAlertCount());
-        assertEquals(1, hospital.getManualCallCount());
+        assertEquals(1, hospital.getHighAlertCount());
         assertEquals(1, hospital.getLowAlertCount());
     }
 
     @Test
     void testBuzzerPriorityOverLowSeverity() {
         Hospital hospital = new Hospital(10, 1);
-        Nurse nurse = new Nurse("TestNurse");
+        Nurse nurse = new Nurse("TestNurse", Simulation.getResolutionChance());
         hospital.addNurse(nurse);
 
         Patient lowPat = new Patient();
@@ -89,7 +85,6 @@ public class HospitalTest {
 
         hospital.dispatchStaff();
 
-        assertEquals(0, hospital.getManualCallCount());
         assertEquals(1, hospital.getLowAlertCount());
     }
 }

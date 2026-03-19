@@ -5,7 +5,7 @@ public class NurseTest {
 
     @Test
     public void testNurseState() {
-        Nurse nurse = new Nurse("Test Nurse");
+        Nurse nurse = new Nurse("Test Nurse", Simulation.getResolutionChance());
         Patient patient = new Patient();
 
         assertFalse(nurse.isBusy());
