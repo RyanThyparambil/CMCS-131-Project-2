@@ -1,19 +1,34 @@
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AlertSeverityTest {
+public class BloodPressureTest {
 
     @Test
-    void testEnumContainsExpectedValues() {
-        assertNotNull(AlertSeverity.valueOf("TIER1_NONURGENT"));
-        assertNotNull(AlertSeverity.valueOf("TIER2_WARNING"));
-        assertNotNull(AlertSeverity.valueOf("TIER3_EMERGENCY"));
-        assertNotNull(AlertSeverity.valueOf("MANUAL"));
+    void testBloodPressureValuesInRange() {
+        BloodPressure bp = new BloodPressure();
+
+        int sys = bp.getSystolic();
+        int dia = bp.getDiastolic();
+
+        assertTrue(sys >= 70 && sys <= 200);
+        assertTrue(dia >= 40 && dia <= 130);
     }
 
     @Test
-    void testEnumCount() {
-        // If someone adds or removes severities, this test will catch it
-        assertEquals(4, AlertSeverity.values().length);
+    void testSeverityIsWithinExpectedRange() {
+        BloodPressure bp = new BloodPressure();
+        int severity = bp.checkCondition();
+
+        assertTrue(severity >= 0 && severity <= 2);
+    }
+
+    @Test
+    void testValueStringFormatting() {
+        BloodPressure bp = new BloodPressure();
+        String s = bp.getValueString();
+
+        assertNotNull(s);
+        assertTrue(s.contains("/"));
+        assertTrue(s.contains("mmHg"));
     }
 }

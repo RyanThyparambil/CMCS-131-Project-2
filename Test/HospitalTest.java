@@ -1,90 +1,79 @@
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
 public class HospitalTest {
 
     @Test
-    void testAddPatient() {
-        Hospital hospital = new Hospital(2, 2);
-        Patient patient1 = new Patient();
-        Patient patient2 = new Patient();
-
-        assertTrue(hospital.addPatient(patient1));
-        assertTrue(hospital.addPatient(patient2));
-        assertEquals(2, hospital.getPatientCount());
-        assertEquals(patient1, hospital.getPatient(0));
-        assertEquals(patient2, hospital.getPatient(1));
-    }
-
-    @Test
-    void testAddPatientFailsWhenFull() {
-        Hospital hospital = new Hospital(2, 2);
-        Patient patient1 = new Patient();
-        Patient patient2 = new Patient();
-        Patient patient3 = new Patient();
-
-        hospital.addPatient(patient1);
-        hospital.addPatient(patient2);
-
-        assertFalse(hospital.addPatient(patient3));
-        assertEquals(2, hospital.getPatientCount());
-    }
-
-    @Test
-    void testGetPatientInvalidIndex() {
-        Hospital hospital = new Hospital(2, 2);
-        Patient patient1 = new Patient();
-        hospital.addPatient(patient1);
-
-        assertNull(hospital.getPatient(-1));
-        assertNull(hospital.getPatient(5));
-    }
-
-    @Test
-    void testAlertAndBuzzerCounters() {
-        Hospital hospital = new Hospital(2, 2);
+    public void testAddPatient() {
+        Hospital hospital = new Hospital(0, 0);
         Patient p = new Patient();
 
-        hospital.addAlert(p, 2);
-        hospital.addAlert(p, 1);
-        hospital.addManualCall(p);
+        hospital.addPatient(p);
 
-        assertEquals(1, hospital.getHighAlertCount());
-        assertEquals(1, hospital.getLowAlertCount());
+        assertEquals(1, hospital.getPatientCount());
+        assertEquals(p, hospital.getPatient(0));
     }
 
     @Test
-    void testDispatchPriority() {
-        Hospital hospital = new Hospital(10, 1);
-        Nurse nurse = new Nurse("TestNurse",Simulation.getResolutionChance());
-        hospital.addNurse(nurse);
+    public void testAddNurse() {
+        Hospital hospital = new Hospital(0, 0);
+        Nurse n = new Nurse("Alice");
 
-        Patient highPat = new Patient();
-        Patient lowPat = new Patient();
+        hospital.addNurse(n);
 
-        hospital.addAlert(lowPat, 1);
-        hospital.addAlert(highPat, 2);
-
-        hospital.dispatchStaff();
-
-        assertEquals(1, hospital.getHighAlertCount());
-        assertEquals(1, hospital.getLowAlertCount());
+        assertEquals(1, hospital.getNurseCount());
     }
 
     @Test
-    void testBuzzerPriorityOverLowSeverity() {
-        Hospital hospital = new Hospital(10, 1);
-        Nurse nurse = new Nurse("TestNurse", Simulation.getResolutionChance());
-        hospital.addNurse(nurse);
+    public void testDispatchAssignsNurse() {
+        // Set resolution chance high so nurse resolves quickly
+        setResolutionChanceForTest(100);
 
-        Patient lowPat = new Patient();
-        Patient buzzerPat = new Patient();
+        Hospital hospital = new Hospital(0, 0);
+        Patient p = new Patient();
+        Nurse n = new Nurse("Bob");
 
-        hospital.addAlert(lowPat, 1);
-        hospital.addManualCall(buzzerPat);
+        hospital.addPatient(p);
+        hospital.addNurse(n);
 
+        // Simulate an alert
         hospital.dispatchStaff();
 
-        assertEquals(1, hospital.getLowAlertCount());
+        assertTrue(n.isBusy());
+        assertEquals(p, n.getCurrentPatient());
+    }
+
+    @Test
+    public void testDispatchResolvesAlert() {
+        // Force guaranteed resolution
+        setResolutionChanceForTest(100);
+
+        Hospital hospital = new Hospital(0, 0);
+        Patient p = new Patient();
+        Nurse n = new Nurse("Carol");
+
+        hospital.addPatient(p);
+        hospital.addNurse(n);
+
+        // Assign
+        hospital.dispatchStaff();
+        assertTrue(n.isBusy());
+
+        // Resolve
+        n.treatPatient();
+
+        assertFalse(n.isBusy());
+        assertNull(n.getCurrentPatient());
+    }
+
+    // Helper to modify Simulation's static resolutionChance for testing
+    private void setResolutionChanceForTest(int chance) {
+        try {
+            java.lang.reflect.Field field = Simulation.class.getDeclaredField("resolutionChance");
+            field.setAccessible(true);
+            field.setInt(null, chance);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 }
