@@ -1,60 +1,48 @@
 public class Alert {
 
-
     private Patient patient;
     private AlertSeverity severity;
-
 
     private int timeCreated;
     private int timeResponded;
     private int timeCompleted;
 
-
     public Alert(Patient patient, AlertSeverity severity) {
         this.patient = patient;
         this.severity = severity;
-
 
         this.timeCreated = Simulation.getCurrentTime();
         this.timeResponded = -1;
         this.timeCompleted = -1;
     }
 
-
     public void markResponded() {
         this.timeResponded = Simulation.getCurrentTime();
     }
-
 
     public void markCompleted() {
         this.timeCompleted = Simulation.getCurrentTime();
     }
 
-
     public Patient getPatient() {
         return patient;
     }
-
 
     public AlertSeverity getSeverity() {
         return severity;
     }
 
-
     public int getTimeCreated() {
         return timeCreated;
     }
-
 
     public int getTimeResponded() {
         return timeResponded;
     }
 
-
     public int getTimeCompleted() {
         return timeCompleted;
     }
-
 
     public String getDescription() {
         return switch (severity) {
@@ -64,7 +52,6 @@ public class Alert {
             case MANUAL -> "Manual";
         };
     }
-
 
     @Override
     public String toString() {
@@ -76,5 +63,3 @@ public class Alert {
                 " | Description: " + getDescription();
     }
 }
-
-

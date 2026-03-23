@@ -1,14 +1,16 @@
 import java.util.Random;
+
 public class BloodPressure extends Observation {
+
     private double systolic;
     private double diastolic;
 
     public BloodPressure() {
         super();
-        Random local = new Random();
 
-        this.systolic = 120.0 + (local.nextGaussian() * 20.0) + Simulation.getRandomInt(-2, 2);
-        this.diastolic = 80.0 + (local.nextGaussian() * 10.0) + Simulation.getRandomInt(-1, 1);
+        Random r = new Random();
+        systolic = 120 + r.nextGaussian() * 20;
+        diastolic = 80 + r.nextGaussian() * 10;
     }
 
     @Override
@@ -16,17 +18,18 @@ public class BloodPressure extends Observation {
         return "Blood Pressure: " + (int)systolic + "/" + (int)diastolic;
     }
 
-    public double getSystolic() { return systolic; }
-    public double getDiastolic() { return diastolic; }
-
     @Override
     public int checkCondition() {
-        if (systolic > 180 || systolic < 80 || diastolic > 120 || diastolic < 40) {
-            return 2;
-        } else if (systolic > 140 || systolic < 90 || diastolic > 90 || diastolic < 60) {
-            return 1;
-        }
+        if (systolic > 180 || diastolic > 120) return 2;
+        if (systolic > 140 || diastolic > 90) return 1;
         return 0;
     }
-}
 
+    public int getSystolic() {
+        return (int)systolic;
+    }
+
+    public int getDiastolic() {
+        return (int)diastolic;
+    }
+}

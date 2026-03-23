@@ -1,26 +1,27 @@
 import java.util.Random;
 
-public class HeartRate extends Observation{
+public class HeartRate extends Observation {
 
     private double rate;
 
     public HeartRate() {
-        super();
+        super();   // <-- REQUIRED so Observation.time is set correctly
 
         Random r = new Random();
-        rate = 85 +r.nextGaussian() * 15 + Simulation.getRandomInt(-2, 2);
+        rate = 85 + r.nextGaussian() * 15 + Simulation.getRandomInt(-2, 2);
     }
 
     public double getRate() {
         return rate;
     }
+
     @Override
     public String getValueString() {
-        return "Heart Rate: "+rate;
+        return "Heart Rate: " + rate;
     }
 
     @Override
-    public int checkCondition(){
+    public int checkCondition() {
         if (rate > 150 || rate < 40) return 2;
         if (rate > 110 || rate < 55) return 1;
         return 0;

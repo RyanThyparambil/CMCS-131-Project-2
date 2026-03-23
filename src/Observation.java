@@ -1,4 +1,5 @@
 public abstract class Observation {
+
     protected int time;
 
     public Observation() {
@@ -10,6 +11,5 @@ public abstract class Observation {
     }
 
     public abstract String getValueString();
-
     public abstract int checkCondition();
 }

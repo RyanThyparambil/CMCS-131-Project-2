@@ -1,13 +1,15 @@
 import java.util.UUID;
 
 public class Patient {
-
     private UUID id;
+    private InjuryTier injuryTier;          // FIXED: real field, not a method
     private Device[] patientDevice = new Device[4];
 
-    public Patient(){
-        this.id=UUID.randomUUID();
-        patientDevice[0]=new HeartRateMonitor();
+    public Patient() {
+        this.id = UUID.randomUUID();
+        this.injuryTier = assignRandomInjury();   // FIXED: assign to field
+
+        patientDevice[0] = new HeartRateMonitor();
         patientDevice[1] = new BloodPressureMonitor();
         patientDevice[2] = new Sp02Monitor();
         patientDevice[3] = new CallBuzzerDevice();
@@ -17,7 +19,7 @@ public class Patient {
         return patientDevice;
     }
 
-    public InjuryTier getInjuryTier() {
+    public InjuryTier getInjuryTier() {     // FIXED: getter for tests
         return injuryTier;
     }
 

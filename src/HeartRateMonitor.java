@@ -1,4 +1,5 @@
 public class HeartRateMonitor extends Device {
+
     private Observation[] observations = new Observation[10];
 
     public Observation read() {

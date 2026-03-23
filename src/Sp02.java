@@ -4,7 +4,7 @@ public class Sp02 extends Observation {
     private double saturation;
 
     public Sp02() {
-        super();
+        super();   // Correct: captures Simulation.getCurrentTime()
 
         Random r = new Random();
         saturation = 98.0 + r.nextGaussian() * 3.0;

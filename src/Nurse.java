@@ -1,14 +1,16 @@
 public class Nurse {
+
     private String name;
     private boolean isBusy;
-    private Patient currentTask;
-    private int resolutionProbability;
 
-    public Nurse(String name, int resolutionProbability) {
+    private Patient currentTask;
+    private Alert currentAlert;
+
+    public Nurse(String name) {
         this.name = name;
         this.isBusy = false;
         this.currentTask = null;
-        this.resolutionProbability = resolutionProbability;
+        this.currentAlert = null;
     }
 
     public Patient getCurrentPatient() {
@@ -19,6 +21,10 @@ public class Nurse {
         return isBusy;
     }
 
+    /**
+     * Compatibility method so NurseTest continues to work.
+     * Creates a temporary Tier 1 alert and assigns it.
+     */
     public void assignPatient(Patient p) {
         Alert temp = new Alert(p, AlertSeverity.TIER1_NONURGENT);
         assignAlert(temp);

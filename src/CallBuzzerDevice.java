@@ -1,14 +1,6 @@
-public class CallBuzzerDevice {
+public class CallBuzzerDevice extends Device {
+
     public Observation read() {
-        return null;
+        return new CallBuzzerObservation();
     }
 }
-
-    class callBuzzerDevice extends Device {
-
-        public Observation read() {
-            return new callBuzzerDevice().read();
-        }
-    }
-
-

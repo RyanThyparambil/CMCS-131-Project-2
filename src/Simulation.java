@@ -8,6 +8,8 @@ public class Simulation {
     private int timeStep;
     private int numPatients;
     private int numNurses;
+
+    // GLOBAL resolution probability used by all nurses
     private static int resolutionChance;
 
     public void setup() {
@@ -30,13 +32,16 @@ public class Simulation {
         System.out.print("Enter nurse resolution probability (1-100): ");
         resolutionChance = input.nextInt();   // <-- sets the global static value
 
+        // Initialize hospital
         this.hospital = new Hospital(numPatients, numNurses);
         currentTime = 0;
 
+        // Add patients
         for (int i = 0; i < numPatients; i++) {
             hospital.addPatient(new Patient());
         }
 
+        // Add nurses (constructor now only takes name)
         for (int i = 0; i < numNurses; i++) {
             hospital.addNurse(new Nurse("Nurse_" + (i + 1)));
         }
@@ -51,6 +56,7 @@ public class Simulation {
         while (currentTime < totalTime) {
             System.out.println("\nTIME: " + currentTime);
 
+            // Check each patient
             for (int i = 0; i < hospital.getPatientCount(); i++) {
                 Patient p = hospital.getPatient(i);
                 if (p != null) {
@@ -59,6 +65,7 @@ public class Simulation {
                 }
             }
 
+            // Dispatch nurses
             hospital.dispatchStaff();
 
             currentTime += timeStep;
@@ -72,10 +79,12 @@ public class Simulation {
         System.out.println("Manual Alerts Processed: " + hospital.getManualAlertCount());
     }
 
+    // Utility random generator
     public static int getRandomInt(int min, int max) {
         return (int)(Math.random() * (max - min + 1)) + min;
     }
 
+    // Nurses use this to determine success chance
     public static int getResolutionChance() {
         return resolutionChance;
     }

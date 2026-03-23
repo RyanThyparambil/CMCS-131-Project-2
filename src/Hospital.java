@@ -1,28 +1,26 @@
 public class Hospital {
+
     private Patient[] patients;
     private Nurse[] nurses;
-    private MyAlertQueue highPriorityQueue;
-    private MyAlertQueue lowPriorityQueue;
     private int nurseCount;
     private int patientCount;
+
+    private AlertQueueManager alertManager = new AlertQueueManager();
+
     private int totalHighAlerts;
     private int totalLowAlerts;
+    private int totalManualAlerts;
 
     public Hospital(int maxPatients, int maxNurses) {
         this.patients = new Patient[maxPatients];
         this.nurses = new Nurse[maxNurses];
-        this.highPriorityQueue = new MyAlertQueue(100);
-        this.lowPriorityQueue = new MyAlertQueue(100);
         this.patientCount = 0;
         this.nurseCount = 0;
-        this.totalHighAlerts = 0;
-        this.totalLowAlerts = 0;
     }
 
     public boolean addPatient(Patient p) {
         if (patientCount < patients.length) {
-            patients[patientCount] = p;
-            patientCount++;
+            patients[patientCount++] = p;
             return true;
         }
         return false;
@@ -30,43 +28,46 @@ public class Hospital {
 
     public void addNurse(Nurse n) {
         if (nurseCount < nurses.length) {
-            nurses[nurseCount] = n;
-            nurseCount++;
+            nurses[nurseCount++] = n;
         }
     }
 
-    public void addAlert(Patient pat, int severity) {
-        Alert newAlert = new Alert(pat, severity);
-        if (severity == 2) {
-            highPriorityQueue.enqueue(newAlert);
+    public void addAlert(Alert alert) {
+
+        System.out.println("ALERT CREATED at t=" + alert.getTimeCreated() +
+                " | Severity: " + alert.getSeverity());
+
+        if (alert.getSeverity() == AlertSeverity.MANUAL) {
+            alertManager.addManual(alert);
+            totalManualAlerts++;
+            return;
+        }
+
+        alertManager.addAlert(alert);
+
+        if (alert.getSeverity() == AlertSeverity.TIER3_EMERGENCY) {
             totalHighAlerts++;
-            System.out.println("URGENT: High priority alert added. Queue size: " + highPriorityQueue.getSize());
         } else {
-            lowPriorityQueue.enqueue(newAlert);
             totalLowAlerts++;
-            System.out.println("ALERT: Low priority alert added. Queue size: " + lowPriorityQueue.getSize());
         }
-    }
-
-    public void addManualCall(Patient pat) {
-        Alert buzzerAlert = new Alert(pat, 2);
-        highPriorityQueue.enqueue(buzzerAlert);
-        System.out.println("BUZZER: Manual call added to high priority queue.");
     }
 
     public void dispatchStaff() {
         for (int i = 0; i < nurseCount; i++) {
             Nurse n = nurses[i];
+
             if (!n.isBusy()) {
-                Alert next = highPriorityQueue.dequeue();
-                if (next == null) {
-                    next = lowPriorityQueue.dequeue();
-                }
+
+                Alert next = alertManager.popTier3();
+                if (next == null) next = alertManager.popTier2();
+                if (next == null) next = alertManager.popTier1();
+                if (next == null) next = alertManager.popManual();
 
                 if (next != null) {
-                    n.assignPatient(next.getPatient());
+                    n.assignAlert(next);
                 }
             }
+
             n.treatPatient();
         }
     }
@@ -77,6 +78,9 @@ public class Hospital {
     }
 
     public int getPatientCount() { return patientCount; }
+    public int getNurseCount() { return nurseCount; }
+
     public int getHighAlertCount() { return totalHighAlerts; }
     public int getLowAlertCount() { return totalLowAlerts; }
+    public int getManualAlertCount() { return totalManualAlerts; }
 }
