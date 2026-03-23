@@ -15,7 +15,6 @@ public class MyAlertQueue {
             size++;
         }
     }
-
     public Alert dequeue() {
         if (size == 0) {
             return null;
@@ -28,11 +27,9 @@ public class MyAlertQueue {
         size--;
         return front;
     }
-
     public int getSize() {
         return size;
     }
-
     public boolean isEmpty() {
         return size == 0;
     }

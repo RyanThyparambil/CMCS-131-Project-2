@@ -1,10 +1,11 @@
 import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
-public class AlertSeverityTest {
+public class AlertTest {
 
     @Nested
-    class alertSeverityTest {
+    class AlertSeverityTest {
+
 
         @Test
         void testEnumContainsExpectedValues() {
