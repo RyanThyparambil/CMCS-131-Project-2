@@ -10,6 +10,7 @@ public class Patient {
         patientDevice[0]=new HeartRateMonitor();
         patientDevice[1] = new BloodPressureMonitor();
         patientDevice[2] = new Sp02Monitor();
+        patientDevice[3] = new CallBuzzerDevice();
     }
 
     public static Patient createPatient() {

@@ -1,5 +1,6 @@
-public class HeartRateMonitor extends Device{
+public class HeartRateMonitor extends Device {
     private Observation[] observations = new Observation[10];
+
     public Observation read() {
         HeartRate reading = new HeartRate();
 
@@ -8,7 +9,6 @@ public class HeartRateMonitor extends Device{
         }
 
         observations[0] = reading;
-
         return reading;
     }
 }
