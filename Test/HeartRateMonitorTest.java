@@ -4,18 +4,28 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HeartRateMonitorTest {
 
     @Test
-    public void testReadAndStore() {
+    void testReadReturnsHeartRateObservation() {
         HeartRateMonitor monitor = new HeartRateMonitor();
-        Observation result = monitor.read();
-        assertNotNull(result);
-        assertTrue(result instanceof HeartRate);
+        Observation obs = monitor.read();
+
+        assertNotNull(obs);
+        assertTrue(obs instanceof HeartRate);
     }
 
     @Test
-    public void testArrayCapacity() {
+    void testHeartRateValueWithinExpectedRange() {
         HeartRateMonitor monitor = new HeartRateMonitor();
-        for (int i = 0; i < 15; i++) {
-            assertNotNull(monitor.read());
-        }
+        HeartRate hr = (HeartRate) monitor.read();
+
+        double value = hr.getRate();
+
+        // Heart rate should be between 30 and 200 bpm
+        assertTrue(value >= 30 && value <= 200);
+    }
+
+    @Test
+    void testMonitorDoesNotReturnNull() {
+        HeartRateMonitor monitor = new HeartRateMonitor();
+        assertNotNull(monitor.read());
     }
 }

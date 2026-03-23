@@ -1,5 +1,5 @@
 public abstract class Observation {
-    protected int time; //(protected means children of this class can access this)
+    protected int time;
 
     public Observation() {
         this.time = Simulation.getCurrentTime();
@@ -12,5 +12,4 @@ public abstract class Observation {
     public abstract String getValueString();
 
     public abstract int checkCondition();
-
 }

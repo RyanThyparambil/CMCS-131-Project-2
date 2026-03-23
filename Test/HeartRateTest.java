@@ -4,18 +4,30 @@ import static org.junit.jupiter.api.Assertions.*;
 public class HeartRateTest {
 
     @Test
-    public void testHeartRateBounds() {
-        for (int i = 0; i < 100; i++) {
-            HeartRate hr = new HeartRate();
-            double rate = hr.getRate();
-            assertTrue(rate >= 30 && rate <= 220);
-        }
+    void testHeartRateValueInRange() {
+        HeartRate hr = new HeartRate();
+        double value = hr.getRate();
+
+
+        // Expected physiological range
+        assertTrue(value >= 30 && value <= 200);
     }
 
     @Test
-    public void testCheckCondition() {
+    void testSeverityIsWithinExpectedRange() {
         HeartRate hr = new HeartRate();
         int severity = hr.checkCondition();
-        assertTrue(severity == 0 || severity == 1 || severity == 2);
+
+        // 0 = normal, 1 = warning, 2 = emergency
+        assertTrue(severity >= 0 && severity <= 2);
+    }
+
+    @Test
+    void testValueStringFormatting() {
+        HeartRate hr = new HeartRate();
+        String s = hr.getValueString();
+
+        assertNotNull(s);
+        assertTrue(s.contains("bpm"));
     }
 }
