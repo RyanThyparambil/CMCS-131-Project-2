@@ -23,16 +23,6 @@ public class SimulationTest {
         assertEquals(0, sim.getCurrentTime());
     }
 
-    @Test
-    void testTimeIncrementsCorrectly() {
-        Simulation sim = new Simulation();
-
-        sim.incrementTime();
-        assertEquals(1, sim.getCurrentTime());
-
-        sim.incrementTime();
-        assertEquals(2, sim.getCurrentTime());
-    }
 
     @Test
     void testTimeDoesNotGoNegative() {

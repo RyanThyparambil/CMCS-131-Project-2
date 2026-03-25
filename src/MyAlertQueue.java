@@ -1,29 +1,56 @@
 public class MyAlertQueue {
-    private Alert[] elements;
-    private int size;
+    private class QueueRecord {
+        public Alert alert;
+        public QueueRecord next;
 
-    public MyAlertQueue(int capacity) {
-        elements = new Alert[capacity];
-        size = 0;
+        public QueueRecord(Alert alert) {
+            this.alert = alert;
+            this.next = null;
+        }
+    }
+
+    private QueueRecord head;
+    private QueueRecord tail;
+
+    public MyAlertQueue() {
+        this.head = null;
+        this.tail = null;
     }
 
     public void enqueue(Alert alert) {
-        if (size < elements.length) {
-            elements[size] = alert;
-            size++;
+        QueueRecord newRecord = new QueueRecord(alert);
+        if (isEmpty()) {
+            head = newRecord;
+            tail = newRecord;
+        } else {
+            tail.next = newRecord;
+            tail = newRecord;
         }
     }
 
     public Alert dequeue() {
-        if (size == 0) return null;
-        Alert front = elements[0];
-        for (int i = 0; i < size - 1; i++) {
-            elements[i] = elements[i + 1];
+        if (isEmpty()) {
+            return null;
         }
-        elements[size - 1] = null;
-        size--;
-        return front;
+        Alert alert = head.alert;
+        head = head.next;
+        if (head == null) {
+            tail = null;
+        }
+        return alert;
     }
 
-    public int getSize() { return size; }
+    public boolean isEmpty() {
+        return head == null;
+    }
+
+    public int count() {
+        int count = 0;
+        QueueRecord current = head;
+        while (current != null) {
+            count++;
+            current = current.next;
+        }
+        return count;
+    }
 }

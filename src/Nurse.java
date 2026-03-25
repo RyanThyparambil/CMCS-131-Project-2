@@ -1,72 +1,39 @@
 public class Nurse {
-
     private String name;
-    private boolean isBusy;
-
-    private Patient currentTask;
     private Alert currentAlert;
+    private int resolutionProbability;
 
-    public Nurse(String name) {
+    public Nurse(String name, int resolutionProbability) {
         this.name = name;
-        this.isBusy = false;
-        this.currentTask = null;
+        this.resolutionProbability = resolutionProbability;
         this.currentAlert = null;
     }
 
-    public Patient getCurrentPatient() {
-        return this.currentTask;
-    }
+    public void resolve(Hospital hospital) {
+        if (currentAlert == null) {
+            currentAlert = hospital.getNextAlert();
+            if (currentAlert != null) {
+                currentAlert.markResponded();
+            }
+        }
 
-    public boolean isBusy() {
-        return isBusy;
-    }
-
-    /**
-     * Compatibility method so NurseTest continues to work.
-     * Creates a temporary Tier 1 alert and assigns it.
-     */
-    public void assignPatient(Patient p) {
-        Alert temp = new Alert(p, AlertSeverity.TIER1_NONURGENT);
-        assignAlert(temp);
-    }
-
-    public void assignAlert(Alert alert) {
-        this.currentAlert = alert;
-        this.currentTask = alert.getPatient();
-        this.isBusy = true;
-
-        alert.markResponded();
-
-        System.out.println("Nurse " + name +
-                " RESPONDED at t=" + alert.getTimeResponded() +
-                " to Patient " + currentTask.getID());
-    }
-
-    public void treatPatient() {
-        if (currentAlert != null) {
-
-            int chance = Simulation.getResolutionChance();
-
-            if (Simulation.getRandomInt(1, 100) <= chance) {
-
+        while (currentAlert != null) {
+            if (Simulation.getRandomInt(1, 100) <= resolutionProbability) {
                 currentAlert.markCompleted();
+                System.out.println("Nurse " + name + " SUCCESS: " + currentAlert.toString());
 
-                System.out.println("Nurse " + name +
-                        " COMPLETED alert at t=" + currentAlert.getTimeCompleted() +
-                        " for Patient " + currentTask.getID());
-
-                currentAlert = null;
-                currentTask = null;
-                isBusy = false;
-
+                currentAlert = hospital.getNextAlert();
+                if (currentAlert != null) {
+                    currentAlert.markResponded();
+                }
             } else {
-                System.out.println("Nurse " + name +
-                        " is still working on Patient " + currentTask.getID());
+                System.out.println("Nurse " + name + " BUSY: Still working on alert for Patient " + currentAlert.getPatient().getID());
+                break;
             }
         }
     }
 
-    public boolean hasPatient(Patient p) {
-        return currentTask == p;
+    public boolean isBusy() {
+        return currentAlert != null;
     }
 }
