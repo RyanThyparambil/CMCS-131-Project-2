@@ -1,8 +1,6 @@
 public class Alert {
-
     private Patient patient;
     private AlertSeverity severity;
-
     private int timeCreated;
     private int timeResponded;
     private int timeCompleted;
@@ -10,7 +8,6 @@ public class Alert {
     public Alert(Patient patient, AlertSeverity severity) {
         this.patient = patient;
         this.severity = severity;
-
         this.timeCreated = Simulation.getCurrentTime();
         this.timeResponded = -1;
         this.timeCompleted = -1;
@@ -24,25 +21,18 @@ public class Alert {
         this.timeCompleted = Simulation.getCurrentTime();
     }
 
-    public Patient getPatient() {
-        return patient;
+    public int getResponseTime() {
+        if (timeResponded != -1 && timeCreated != -1) {
+            return timeResponded - timeCreated;
+        }
+        return 0;
     }
 
-    public AlertSeverity getSeverity() {
-        return severity;
-    }
-
-    public int getTimeCreated() {
-        return timeCreated;
-    }
-
-    public int getTimeResponded() {
-        return timeResponded;
-    }
-
-    public int getTimeCompleted() {
-        return timeCompleted;
-    }
+    public Patient getPatient() { return patient; }
+    public AlertSeverity getSeverity() { return severity; }
+    public int getTimeCreated() { return timeCreated; }
+    public int getTimeResponded() { return timeResponded; }
+    public int getTimeCompleted() { return timeCompleted; }
 
     public String getDescription() {
         return switch (severity) {

@@ -14,4 +14,16 @@ public class HospitalTest {
         assertEquals(1, h.getHighAlertCount());
         assertNotNull(h.getNextAlert());
     }
+
+    @Test
+    public void testHistoryTracking() {
+        Hospital h = new Hospital(1, 1);
+        Alert a = new Alert(new Patient(), AlertSeverity.MANUAL);
+
+        h.archiveAlert(a);
+
+        MyAlertQueue history = h.getHistory();
+        assertEquals(1, history.count());
+        assertEquals(a, history.dequeue());
+    }
 }

@@ -4,6 +4,8 @@ public class Hospital {
     private int nurseCount;
     private int patientCount;
     private AlertQueueManager alertManager;
+    private MyAlertQueue completedHistory;
+    private int longestResponseTime = 0;
 
     private int totalHighAlerts = 0;
     private int totalLowAlerts = 0;
@@ -13,8 +15,25 @@ public class Hospital {
         this.patients = new Patient[maxPatients];
         this.nurses = new Nurse[maxNurses];
         this.alertManager = new AlertQueueManager();
+        this.completedHistory = new MyAlertQueue();
         this.patientCount = 0;
         this.nurseCount = 0;
+    }
+
+    public void archiveAlert(Alert alert) {
+        int currentResponseTime = alert.getResponseTime();
+        if (currentResponseTime > longestResponseTime) {
+            longestResponseTime = currentResponseTime;
+        }
+        completedHistory.enqueue(alert);
+    }
+
+    public MyAlertQueue getHistory() {
+        return completedHistory;
+    }
+
+    public int getLongestResponseTime() {
+        return longestResponseTime;
     }
 
     public boolean addPatient(Patient p) {
@@ -33,32 +52,23 @@ public class Hospital {
 
     public void receiveAlert(Alert alert) {
         alertManager.addAlert(alert);
-
         if (alert.getSeverity() == AlertSeverity.TIER3_EMERGENCY) totalHighAlerts++;
         else if (alert.getSeverity() == AlertSeverity.MANUAL) totalManualAlerts++;
         else totalLowAlerts++;
-
-        System.out.println("ALERT RECEIVED: " + alert.getSeverity() + " | Total in Queue: " + alertManager.getTotalCount());
     }
 
     public Alert getNextAlert() {
         return alertManager.getNextAlert();
     }
 
-    public void dispatchStaff() {
+    public void dispatchStaff(TelemedicineProvider tele) {
         for (int i = 0; i < nurseCount; i++) {
-            nurses[i].resolve(this);
+            nurses[i].resolve(this, tele);
         }
     }
 
-    public int getUrgentCount() {
-        return alertManager.getUrgentCount();
-    }
-
-    public int getNonUrgentCount() {
-        return alertManager.getNonUrgentCount();
-    }
-
+    public int getUrgentCount() { return alertManager.getUrgentCount(); }
+    public int getNonUrgentCount() { return alertManager.getNonUrgentCount(); }
     public int getPatientCount() { return patientCount; }
     public Patient getPatient(int index) { return patients[index]; }
     public int getHighAlertCount() { return totalHighAlerts; }

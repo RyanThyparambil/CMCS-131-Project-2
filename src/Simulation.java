@@ -2,6 +2,7 @@ import java.util.Scanner;
 
 public class Simulation {
     private Hospital hospital;
+    private TelemedicineProvider teleProvider;
     private static int currentTime;
     private int totalTime;
     private int timeStep;
@@ -21,7 +22,11 @@ public class Simulation {
         System.out.print("Enter nurse resolution probability (1-100): ");
         resolutionChance = input.nextInt();
 
+        System.out.print("Enter max simultaneous telemedicine sessions: ");
+        int teleSessions = input.nextInt();
+
         this.hospital = new Hospital(numPatients, numNurses);
+        this.teleProvider = new TelemedicineProvider(teleSessions);
         currentTime = 0;
 
         for (int i = 0; i < numPatients; i++) {
@@ -35,8 +40,7 @@ public class Simulation {
 
     public void run() {
         while (currentTime < totalTime) {
-            System.out.println("\nTIME: " + currentTime);
-            System.out.println("Queue Status: Urgent(" + hospital.getUrgentCount() + ") Non-Urgent(" + hospital.getNonUrgentCount() + ")");
+            System.out.println("\n--- TIME: " + currentTime + " | Telemed Available: " + teleProvider.getAvailable() + " ---");
 
             for (int i = 0; i < hospital.getPatientCount(); i++) {
                 Patient p = hospital.getPatient(i);
@@ -44,13 +48,30 @@ public class Simulation {
                 p.pressBuzzer(hospital);
             }
 
-            hospital.dispatchStaff();
+            hospital.dispatchStaff(teleProvider);
             currentTime += timeStep;
         }
     }
 
     public void process() {
-        System.out.println("\n--- Simulation Complete ---");
+        System.out.println("\n--- FINAL SIMULATION SUMMARY ---");
+        MyAlertQueue history = hospital.getHistory();
+        int resolvedCount = history.count();
+        double totalWait = 0;
+
+        System.out.println("Total Alerts Resolved: " + resolvedCount);
+
+        while (!history.isEmpty()) {
+            Alert a = history.dequeue();
+            totalWait += a.getResponseTime();
+        }
+
+        if (resolvedCount > 0) {
+            System.out.println("Average Response Time: " + (totalWait / resolvedCount) + " mins");
+            System.out.println("Longest Response Time: " + hospital.getLongestResponseTime() + " mins");
+        }
+
+        System.out.println("Simulation Ended Successfully.");
     }
 
     public static int getRandomInt(int min, int max) {
@@ -58,5 +79,4 @@ public class Simulation {
     }
 
     public static int getCurrentTime() { return currentTime; }
-    public static int getResolutionChance() { return resolutionChance; }
 }

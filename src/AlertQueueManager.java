@@ -3,6 +3,7 @@ public class AlertQueueManager {
     private MyAlertQueue tier2Queue;
     private MyAlertQueue tier3Queue;
     private MyAlertQueue manualQueue;
+    private final int AGE_THRESHOLD = 30;
 
     public AlertQueueManager() {
         this.tier1Queue = new MyAlertQueue();
@@ -21,10 +22,31 @@ public class AlertQueueManager {
     }
 
     public Alert getNextAlert() {
+        Alert aged = getAgedAlert();
+        if (aged != null) {
+            return aged;
+        }
+
         if (!tier3Queue.isEmpty()) return tier3Queue.dequeue();
         if (!manualQueue.isEmpty()) return manualQueue.dequeue();
         if (!tier2Queue.isEmpty()) return tier2Queue.dequeue();
         if (!tier1Queue.isEmpty()) return tier1Queue.dequeue();
+        return null;
+    }
+
+    private Alert getAgedAlert() {
+        int now = Simulation.getCurrentTime();
+
+        if (!tier2Queue.isEmpty()) {
+            if (now - tier2Queue.peek().getTimeCreated() > AGE_THRESHOLD) {
+                return tier2Queue.dequeue();
+            }
+        }
+        if (!tier1Queue.isEmpty()) {
+            if (now - tier1Queue.peek().getTimeCreated() > AGE_THRESHOLD) {
+                return tier1Queue.dequeue();
+            }
+        }
         return null;
     }
 

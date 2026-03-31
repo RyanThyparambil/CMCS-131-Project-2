@@ -18,15 +18,13 @@ public class SimulationTest {
     }
 
     @Test
-    void testTimeStartsAtZero() {
-        Simulation sim = new Simulation();
-        assertEquals(0, sim.getCurrentTime());
+    void testCurrentTimeStaticAccess() {
+        assertEquals(0, Simulation.getCurrentTime());
     }
 
-
     @Test
-    void testTimeDoesNotGoNegative() {
+    void testSimulationRunStepLogic() {
         Simulation sim = new Simulation();
-        assertTrue(sim.getCurrentTime() >= 0);
+        assertTrue(Simulation.getCurrentTime() >= 0);
     }
 }

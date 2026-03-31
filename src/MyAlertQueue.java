@@ -29,15 +29,16 @@ public class MyAlertQueue {
     }
 
     public Alert dequeue() {
-        if (isEmpty()) {
-            return null;
-        }
+        if (isEmpty()) return null;
         Alert alert = head.alert;
         head = head.next;
-        if (head == null) {
-            tail = null;
-        }
+        if (head == null) tail = null;
         return alert;
+    }
+
+    public Alert peek() {
+        if (isEmpty()) return null;
+        return head.alert;
     }
 
     public boolean isEmpty() {
